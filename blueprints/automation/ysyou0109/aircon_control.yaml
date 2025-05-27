@@ -697,7 +697,7 @@ action:
                       entity_id: !input climate_entity
                     data:
                       fan_mode: high
-                  - service: climate.turn_on
+                  - service: input_boolean.turn_on
                     target:
                       entity_id: !input input_end_mode_now
                   - delay:
