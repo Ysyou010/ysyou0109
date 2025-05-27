@@ -31,7 +31,7 @@ blueprint:
           device_class: humidity
     input_number_now_discomfort:
       name: 현재 불쾌지수
-      description: 블루피린트외에 현재의 불쾌지수를 계산한 자동화와 연동될 숫자
+      description: 블루프린트외에 현재의 불쾌지수를 계산할 자동화와 연동될 숫자
       selector:
         entity:
           domain: input_number
