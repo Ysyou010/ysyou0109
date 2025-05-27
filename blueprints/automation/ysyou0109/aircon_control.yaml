@@ -254,14 +254,21 @@ action:
                               entity_id: !input input_boost_mode
                           - delay:
                               minutes: 10
-                          - service: input_boolean.turn_on
-                            target:
-                              entity_id: !input input_end_mode
+                          - choose:
+                              - conditions:
+                                  - condition: state
+                                    entity_id: !input input_boolean_switch
+                                    state: "on"
+                                sequence:
+                                  - service: input_boolean.turn_on
+                                    target:
+                                      entity_id: !input input_end_mode
+                            default: []
                           
                     default:
-                          - service: input_boolean.turn_off
-                            target:
-                              entity_id: !input input_boost_mode
+                      - service: input_boolean.turn_off
+                        target:
+                          entity_id: !input input_boost_mode
             default:
               - service: climate.set_fan_mode
                 target:
@@ -270,9 +277,17 @@ action:
                   fan_mode: auto
               - delay:
                   minutes: 10
-              - service: input_boolean.turn_on
-                target:
-                  entity_id: !input input_end_mode
+              - choose:
+                  - conditions:
+                      - condition: state
+                        entity_id: !input input_boolean_switch
+                        state: "on"
+                    sequence:
+                      - service: input_boolean.turn_on
+                        target:
+                          entity_id: !input input_end_mode
+                default: []
+
 
       # 2) 에어컨 ON (직접 켜짐 감지)
       - conditions:
@@ -318,7 +333,6 @@ action:
                     entity_id: !input temperature_sensor
                     above: !input input_number_boost_threshold
                 sequence:
-                  # 부스트 로직 동일
                   - service: climate.set_temperature
                     target:
                       entity_id: !input climate_entity
@@ -355,13 +369,21 @@ action:
                               entity_id: !input input_boost_mode
                           - delay:
                               minutes: 10
-                          - service: input_boolean.turn_on
-                            target:
-                              entity_id: !input input_end_mode
+                          - choose:
+                              - conditions:
+                                  - condition: state
+                                    entity_id: !input input_boolean_switch
+                                    state: "on"
+                                sequence:
+                                  - service: input_boolean.turn_on
+                                    target:
+                                      entity_id: !input input_end_mode
+                            default: []
+                          
                     default:
-                          - service: input_boolean.turn_off
-                            target:
-                              entity_id: !input input_boost_mode
+                      - service: input_boolean.turn_off
+                        target:
+                          entity_id: !input input_boost_mode
             default:
               - service: climate.set_fan_mode
                 target:
@@ -370,10 +392,18 @@ action:
                   fan_mode: auto
               - delay:
                   minutes: 10
-              - service: input_boolean.turn_on
-                target:
-                  entity_id: !input input_end_mode
+              - choose:
+                  - conditions:
+                      - condition: state
+                        entity_id: !input input_boolean_switch
+                        state: "on"
+                    sequence:
+                      - service: input_boolean.turn_on
+                        target:
+                          entity_id: !input input_end_mode
+                default: []
 
+                
       # 3) 송풍 ON (직접 켜짐 감지)
       - conditions:
           - condition: trigger
@@ -418,7 +448,6 @@ action:
                     entity_id: !input temperature_sensor
                     above: !input input_number_boost_threshold
                 sequence:
-                  # 부스트 로직 동일
                   - service: climate.set_temperature
                     target:
                       entity_id: !input climate_entity
@@ -455,13 +484,21 @@ action:
                               entity_id: !input input_boost_mode
                           - delay:
                               minutes: 10
-                          - service: input_boolean.turn_on
-                            target:
-                              entity_id: !input input_end_mode
+                          - choose:
+                              - conditions:
+                                  - condition: state
+                                    entity_id: !input input_boolean_switch
+                                    state: "on"
+                                sequence:
+                                  - service: input_boolean.turn_on
+                                    target:
+                                      entity_id: !input input_end_mode
+                            default: []
+                          
                     default:
-                          - service: input_boolean.turn_off
-                            target:
-                              entity_id: !input input_boost_mode
+                      - service: input_boolean.turn_off
+                        target:
+                          entity_id: !input input_boost_mode
             default:
               - service: climate.set_fan_mode
                 target:
@@ -470,9 +507,17 @@ action:
                   fan_mode: auto
               - delay:
                   minutes: 10
-              - service: input_boolean.turn_on
-                target:
-                  entity_id: !input input_end_mode
+              - choose:
+                  - conditions:
+                      - condition: state
+                        entity_id: !input input_boolean_switch
+                        state: "on"
+                    sequence:
+                      - service: input_boolean.turn_on
+                        target:
+                          entity_id: !input input_end_mode
+                default: []
+
 
 
 
