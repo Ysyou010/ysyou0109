@@ -29,9 +29,56 @@ blueprint:
         entity:
           domain: sensor
           device_class: humidity
+    input_number_boost_threshold:
+      name: 부스트 모드 진입 기준 온도 (°C)
+      description: 설정한 온도보다 현재온도가 높으면 부스트 모드 작동합니다.
+      default: 24
+      selector:
+        number:
+          min: 20
+          max: 30
+          unit_of_measurement: "°C"
+          mode: slider
+    input_number_boost_duration:
+      name: 부스트 모드 지속 시간 (분)
+      default: 10
+      selector:
+        number:
+          min: 1
+          max: 60
+          unit_of_measurement: 분
+          mode: slider
+    input_boost_mode:
+      name: 부스트모드 상태확인용
+      selector:
+        entity:
+          domain: input_boolean
+
+
+    input_number_dehumid_threshold:
+      name: 제습 병행 기준 습도 (%)
+      description: 설정습도보다 높을경우 제습기능을우선합니다.
+      selector:
+        entity:
+          domain: input_number
+    input_dry_mode:
+      name: 제습모드 상태확인용
+      selector:
+        entity:
+          domain: input_boolean
+    input_number_general_temperature:
+      name: 일반냉방 모드 설정 온도 (°C)
+      default: 22
+      selector:
+        number:
+          min: 20
+          max: 25
+          unit_of_measurement: "°C"
+          mode: slider
+          
     input_number_now_discomfort:
       name: 현재 불쾌지수
-      description: 블루프린트외에 현재의 불쾌지수를 계산할 자동화와 연동될 숫자
+      description: 블루피린트외에 현재의 불쾌지수를 계산한 자동화와 연동될 숫자
       selector:
         entity:
           domain: input_number
@@ -51,55 +98,22 @@ blueprint:
           max: 1.0
           step: 0.1
           mode: slider
-    input_boost_mode:
-      name: 부스트모드 상태확인용
-      selector:
-        entity:
-          domain: input_boolean
-    input_number_boost_duration:
-      name: 부스트 모드 지속 시간 (분)
-      default: 10
-      selector:
-        number:
-          min: 1
-          max: 60
-          unit_of_measurement: 분
-          mode: slider
-    input_number_boost_threshold:
-      name: 부스트 모드 진입 기준 온도 (°C)
-      description: 설정한 온도보다 현재온도가 높으면 부스트 모드 작동합니다.
-      default: 24
-      selector:
-        number:
-          min: 20
-          max: 30
-          unit_of_measurement: "°C"
-          mode: slider
     input_index_mode:
       name: 불쾌지수모드 상태확인용
       selector:
         entity:
           domain: input_boolean
-    input_number_general_temperature:
-      name: 일반냉방 모드 설정 온도 (°C)
-      default: 22
+
+    input_number_shutdown_delay:
+      name: 종료 모드 송풍 유지 시간 (분)
+      description: 만약 에어컨의 자체 건조기능과 중복된다면 송풍유지 시간을 줄이세요
+      default: 30
       selector:
         number:
-          min: 20
-          max: 25
-          unit_of_measurement: "°C"
+          min: 1
+          max: 120
+          unit_of_measurement: 분
           mode: slider
-    input_number_dehumid_threshold:
-      name: 제습 병행 기준 습도 (%)
-      description: 설정습도보다 높을경우 제습기능을우선합니다.
-      selector:
-        entity:
-          domain: input_number
-    input_dry_mode:
-      name: 제습모드 상태확인용
-      selector:
-        entity:
-          domain: input_boolean
     input_end_mode:
       name: 종료모드 작동대기중
       description: 에어컨이 켜지고 10분이 지나면 켜지고 에어컨이 종료되면 송풍 유지시간동안 작동되고 에어컨이 꺼집니다. (단, 에어컨자체의 건조시간과 중복 실행될수있습니다.)
@@ -111,16 +125,7 @@ blueprint:
       selector:
         entity:
           domain: input_boolean
-    input_number_shutdown_delay:
-      name: 종료 모드 송풍 유지 시간 (분)
-      description: 만약 에어컨의 자체 건조기능과 중복된다면 송풍유지 시간을 줄이세요
-      default: 30
-      selector:
-        number:
-          min: 1
-          max: 120
-          unit_of_measurement: 분
-          mode: slider
+
 
 trigger:
   - platform: state
