@@ -257,7 +257,11 @@ action:
                           - service: input_boolean.turn_on
                             target:
                               entity_id: !input input_end_mode
-
+            default:
+                - delay : "00:10:00"
+                - service: input_boolean.turn_on
+                  target:
+                    entity_id: !input input_end_mode
 
       # 2) 에어컨 ON (직접 켜짐 감지)
       - conditions:
@@ -342,6 +346,11 @@ action:
                           - service: input_boolean.turn_on
                             target:
                               entity_id: !input input_end_mode
+            default:
+                - delay : "00:10:00"
+                - service: input_boolean.turn_on
+                  target:
+                    entity_id: !input input_end_mode
 
                 
       # 3) 송풍 ON (직접 켜짐 감지)
@@ -427,6 +436,11 @@ action:
                           - service: input_boolean.turn_on
                             target:
                               entity_id: !input input_end_mode
+            default:
+                - delay : "00:10:00"
+                - service: input_boolean.turn_on
+                  target:
+                    entity_id: !input input_end_mode
 
 
 
