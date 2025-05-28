@@ -206,6 +206,7 @@ action:
               entity_id: !input climate_entity
             data:
               hvac_mode: cool
+          - delay: "00:00:01"
           - service: climate.set_temperature
             target:
               entity_id: !input climate_entity
@@ -244,6 +245,7 @@ action:
                               entity_id: !input climate_entity
                             data:
                               temperature: !input input_number_general_temperature
+                          - delay: "00:00:01"
                           - service: climate.set_fan_mode
                             target:
                               entity_id: !input climate_entity
@@ -252,41 +254,9 @@ action:
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_boost_mode
-                          - delay:
-                              minutes: 10
-                          - choose:
-                              - conditions:
-                                  - condition: state
-                                    entity_id: !input input_boolean_switch
-                                    state: "on"
-                                sequence:
-                                  - service: input_boolean.turn_on
-                                    target:
-                                      entity_id: !input input_end_mode
-                            default: []
-                          
-                    default:
-                      - service: input_boolean.turn_off
-                        target:
-                          entity_id: !input input_boost_mode
-            default:
-              - service: climate.set_fan_mode
-                target:
-                  entity_id: !input climate_entity
-                data:
-                  fan_mode: auto
-              - delay:
-                  minutes: 10
-              - choose:
-                  - conditions:
-                      - condition: state
-                        entity_id: !input input_boolean_switch
-                        state: "on"
-                    sequence:
-                      - service: input_boolean.turn_on
-                        target:
-                          entity_id: !input input_end_mode
-                default: []
+                          - service: input_boolean.turn_on
+                            target:
+                              entity_id: !input input_end_mode
 
 
       # 2) 에어컨 ON (직접 켜짐 감지)
@@ -321,6 +291,7 @@ action:
               entity_id: !input climate_entity
             data:
               hvac_mode: cool
+          - delay: "00:00:01"
           - service: climate.set_temperature
             target:
               entity_id: !input climate_entity
@@ -359,6 +330,7 @@ action:
                               entity_id: !input climate_entity
                             data:
                               temperature: !input input_number_general_temperature
+                          - delay: "00:00:01"
                           - service: climate.set_fan_mode
                             target:
                               entity_id: !input climate_entity
@@ -367,41 +339,9 @@ action:
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_boost_mode
-                          - delay:
-                              minutes: 10
-                          - choose:
-                              - conditions:
-                                  - condition: state
-                                    entity_id: !input input_boolean_switch
-                                    state: "on"
-                                sequence:
-                                  - service: input_boolean.turn_on
-                                    target:
-                                      entity_id: !input input_end_mode
-                            default: []
-                          
-                    default:
-                      - service: input_boolean.turn_off
-                        target:
-                          entity_id: !input input_boost_mode
-            default:
-              - service: climate.set_fan_mode
-                target:
-                  entity_id: !input climate_entity
-                data:
-                  fan_mode: auto
-              - delay:
-                  minutes: 10
-              - choose:
-                  - conditions:
-                      - condition: state
-                        entity_id: !input input_boolean_switch
-                        state: "on"
-                    sequence:
-                      - service: input_boolean.turn_on
-                        target:
-                          entity_id: !input input_end_mode
-                default: []
+                          - service: input_boolean.turn_on
+                            target:
+                              entity_id: !input input_end_mode
 
                 
       # 3) 송풍 ON (직접 켜짐 감지)
@@ -436,6 +376,7 @@ action:
               entity_id: !input climate_entity
             data:
               hvac_mode: cool
+          - delay: "00:00:01"
           - service: climate.set_temperature
             target:
               entity_id: !input climate_entity
@@ -474,6 +415,7 @@ action:
                               entity_id: !input climate_entity
                             data:
                               temperature: !input input_number_general_temperature
+                          - delay: "00:00:01"
                           - service: climate.set_fan_mode
                             target:
                               entity_id: !input climate_entity
@@ -482,41 +424,9 @@ action:
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_boost_mode
-                          - delay:
-                              minutes: 10
-                          - choose:
-                              - conditions:
-                                  - condition: state
-                                    entity_id: !input input_boolean_switch
-                                    state: "on"
-                                sequence:
-                                  - service: input_boolean.turn_on
-                                    target:
-                                      entity_id: !input input_end_mode
-                            default: []
-                          
-                    default:
-                      - service: input_boolean.turn_off
-                        target:
-                          entity_id: !input input_boost_mode
-            default:
-              - service: climate.set_fan_mode
-                target:
-                  entity_id: !input climate_entity
-                data:
-                  fan_mode: auto
-              - delay:
-                  minutes: 10
-              - choose:
-                  - conditions:
-                      - condition: state
-                        entity_id: !input input_boolean_switch
-                        state: "on"
-                    sequence:
-                      - service: input_boolean.turn_on
-                        target:
-                          entity_id: !input input_end_mode
-                default: []
+                          - service: input_boolean.turn_on
+                            target:
+                              entity_id: !input input_end_mode
 
 
 
@@ -552,11 +462,13 @@ action:
                   - service: input_boolean.turn_on
                     target:
                       entity_id: !input input_dry_mode
+                  - delay: "00:00:01"
                   - service: climate.set_hvac_mode
                     target:
                       entity_id: !input climate_entity
                     data:
                       hvac_mode: dry
+                  - delay: "00:00:01"
                   - service: climate.set_fan_mode
                     target:
                       entity_id: !input climate_entity
@@ -574,11 +486,13 @@ action:
                               entity_id: !input climate_entity
                             data:
                               hvac_mode: cool
+                          - delay: "00:00:01"
                           - service: climate.set_fan_mode
                             target:
                               entity_id: !input climate_entity
                             data:
                               fan_mode: auto
+                          - delay: "00:00:01"
                           - service: climate.set_temperature
                             target:
                               entity_id: !input climate_entity
@@ -588,10 +502,6 @@ action:
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_dry_mode
-                    default:
-                      - service: input_boolean.turn_off
-                        target:
-                          entity_id: !input input_dry_mode
 
               # 불쾌지수 높음 → 냉방
               - conditions:
@@ -607,30 +517,23 @@ action:
                       entity_id: !input climate_entity
                     data:
                       hvac_mode: cool
+                  - delay: "00:00:01"
                   - service: climate.set_temperature
                     target:
                       entity_id: !input climate_entity
                     data:
                       temperature: !input input_number_general_temperature
+                  - delay: "00:00:01"
                   - service: climate.set_fan_mode
                     target:
                       entity_id: !input climate_entity
                     data:
                       fan_mode: high
                   - delay: "00:15:00"
-                  - choose:
-                      - conditions:
-                          - condition: state
-                            entity_id: !input input_boolean_switch
-                            state: "on"
-                        sequence:
-                          - service: input_boolean.turn_off
-                            target:
-                              entity_id: !input input_index_mode
-                    default:
-                      - service: input_boolean.turn_off
-                        target:
-                          entity_id: !input input_index_mode
+                  - service: input_boolean.turn_off
+                    target:
+                      entity_id: !input input_index_mode
+
 
               # 불쾌지수 낮음 → 송풍
               - conditions:
@@ -646,52 +549,66 @@ action:
                       entity_id: !input climate_entity
                     data:
                       hvac_mode: fan_only
+                  - delay: "00:00:01"
                   - service: climate.set_fan_mode
                     target:
                       entity_id: !input climate_entity
                     data:
                       fan_mode: auto
                   - delay: "00:10:00"
-                  
-            default:
-              - service: input_boolean.turn_on
-                target:
-                  entity_id: !input input_index_mode
-              - service: climate.set_hvac_mode
-                target:
-                  entity_id: !input climate_entity
-                data:
-                  hvac_mode: fan_only
-              - delay: "00:10:00"
-              - choose:
-                  - conditions:
-                      - condition: state
-                        entity_id: !input input_boolean_switch
-                        state: "on"
-                    sequence:
-                      - service: climate.set_hvac_mode
-                        target:
-                          entity_id: !input climate_entity
-                        data:
-                          hvac_mode: cool
-                      - service: climate.set_temperature
-                        target:
-                          entity_id: !input climate_entity
-                        data:
-                          temperature: !input input_number_general_temperature
-                      - service: climate.set_fan_mode
-                        target:
-                          entity_id: !input climate_entity
-                        data:
-                          fan_mode: auto
-                      - delay: "00:05:00"
-                      - service: input_boolean.turn_off
-                        target:
-                          entity_id: !input input_index_mode
-                default:
                   - service: input_boolean.turn_off
                     target:
                       entity_id: !input input_index_mode
+                  
+             # 목표 불쾌지수 범위내 송풍 10분
+              - conditions:
+                  - condition: state
+                    entity_id: !input input_boolean_switch
+                    state: "on"
+                sequence:
+                  - service: input_boolean.turn_on
+                    target:
+                      entity_id: !input input_index_mode
+                  - service: climate.set_hvac_mode
+                    target:
+                      entity_id: !input climate_entity
+                    data:
+                      hvac_mode: fan_only
+                  - delay: "00:00:01"
+                  - service: climate.set_fan_mode
+                    target:
+                      entity_id: !input climate_entity
+                    data:
+                      fan_mode: auto
+                  - delay: "00:10:00"
+                  - choose:
+                    - conditions:
+                        - condition: state
+                          entity_id: !input input_boolean_switch
+                          state: "on"
+                      sequence:
+                        - service: climate.set_hvac_mode
+                          target:
+                            entity_id: !input climate_entity
+                          data:
+                            hvac_mode: cool
+                        - delay: "00:00:01"
+                        - service: climate.set_temperature
+                          target:
+                            entity_id: !input climate_entity
+                          data:
+                            temperature: !input input_number_general_temperature
+                        - delay: "00:00:01"
+                        - service: climate.set_fan_mode
+                          target:
+                            entity_id: !input climate_entity
+                          data:
+                            fan_mode: auto
+                        - delay: "00:05:00"
+                        - service: input_boolean.turn_off
+                          target:
+                            entity_id: !input input_index_mode
+
 
       # 4) 가상 스위치 OFF → 송풍 후 종료
       - conditions:
@@ -748,7 +665,7 @@ action:
                           - service: climate.turn_off
                             target:
                               entity_id: !input climate_entity
-                    default: []
+
             default:
                 - service: input_boolean.turn_off
                   target:
@@ -832,7 +749,7 @@ action:
                           - service: climate.turn_off
                             target:
                               entity_id: !input climate_entity
-                    default: []
+
             default:
                 - service: input_boolean.turn_off
                   target:
