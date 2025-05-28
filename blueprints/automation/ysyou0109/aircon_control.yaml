@@ -106,11 +106,11 @@ blueprint:
 
     input_number_shutdown_delay:
       name: 종료 모드 송풍 유지 시간 (분)
-      description: 만약 에어컨의 자체 건조기능과 중복된다면 송풍유지 시간을 줄이세요
+      description: 만약 에어컨의 자체 건조기능과 중복된다면 송풍유지 시간을 줄이세요 "0" 으로 해두면 기능 비활성화(에어컨 자체의 건조기능이 작동할지 안할지는 모릅니다.)
       default: 30
       selector:
         number:
-          min: 1
+          min: 0
           max: 120
           unit_of_measurement: 분
           mode: slider
@@ -467,7 +467,7 @@ action:
             state: "off"
         sequence:
           - choose:
-              # 제습 병행
+              # 제습 병행 제습 10분+냉방5분분
               - conditions:
                   - condition: numeric_state
                     entity_id: !input humidity_sensor
@@ -517,12 +517,13 @@ action:
                             target:
                               entity_id: !input input_dry_mode
 
-              # 불쾌지수 높음 → 냉방
+              # 불쾌지수 높음 → 냉방10분분
               - conditions:
                   - condition: template
                     value_template: >
                       {{ discomfort_index > (target_discomfort + tol) }}
                 sequence:
+                  - delay: "00:00:03"
                   - service: input_boolean.turn_on
                     target:
                       entity_id: !input input_index_mode
@@ -543,18 +544,19 @@ action:
                       entity_id: !input climate_entity
                     data:
                       fan_mode: high
-                  - delay: "00:15:00"
+                  - delay: "00:10:00"
                   - service: input_boolean.turn_off
                     target:
                       entity_id: !input input_index_mode
 
 
-              # 불쾌지수 낮음 → 송풍
+              # 불쾌지수 낮음 → 송풍10분분
               - conditions:
                   - condition: template
                     value_template: >
                       {{ discomfort_index < (target_discomfort + tol) }}
                 sequence:
+                  - delay: "00:00:03"
                   - service: input_boolean.turn_on
                     target:
                       entity_id: !input input_index_mode
@@ -574,8 +576,9 @@ action:
                     target:
                       entity_id: !input input_index_mode
                   
-             # 목표 불쾌지수 범위내 송풍 10분
+             # 목표 불쾌지수 범위내 송풍 10+냉방5
               - conditions:
+                  - delay: "00:00:03"
                   - condition: state
                     entity_id: !input input_boolean_switch
                     state: "on"
