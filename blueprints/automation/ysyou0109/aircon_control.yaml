@@ -198,6 +198,7 @@ action:
       n_idx: !input input_number_now_discomfort
       tgt_idx: !input input_number_target_discomfort
       end_mode: !input input_end_mode
+      shut_delay: !input input_number_shutdown_delay
       temperature: "{{ states[temp_s].state | float(0) }}"
       humidity: "{{ states[hum_s].state | float(0) }}"
       discomfort_index: "{{ states[n_idx].state | float(0) }}"
@@ -241,7 +242,7 @@ action:
                     above: !input input_number_boost_threshold
                   - condition: template
                     value_template: >
-                       {{ 0 < states('input_number.boost_duration') | float(0) }}
+                       {{ 0 < boost_dur}}
                 sequence:
                   - service: climate.set_temperature
                     target:
@@ -333,7 +334,7 @@ action:
                     above: !input input_number_boost_threshold
                   - condition: template
                     value_template: >
-                       {{ 0 < states('input_number.boost_duration') | float(0) }}
+                       {{ 0 < boost_dur}}
                 sequence:
                   - service: climate.set_temperature
                     target:
@@ -426,7 +427,7 @@ action:
                     above: !input input_number_boost_threshold
                   - condition: template
                     value_template: >
-                       {{ 0 < states('input_number.boost_duration') | float(0) }}
+                       {{ 0 < boost_dur}}
                 sequence:
                   - service: climate.set_temperature
                     target:
@@ -707,7 +708,7 @@ action:
                     state: "off"
                   - condition: template
                     value_template: >
-                       {{ 0 < states('input_number_shutdown_delay') | float(0) }}
+                       {{ 0 < shut_delay }}
                 sequence:
                   - service: climate.set_hvac_mode
                     target:
@@ -790,7 +791,7 @@ action:
                     state: "off"
                   - condition: template
                     value_template: >
-                       {{ 0 < states('input_number_shutdown_delay') | float(0) }}
+                       {{ 0 < shut_delay }}
                 sequence:
                   - service: input_boolean.turn_on
                     target:
