@@ -175,7 +175,13 @@ trigger:
     entity_id: !input input_index_mode
     from: "off"
     to: "on"
+  - platform: state
+    id: over_time
+    entity_id: !input input_index_mode
+    to: "off"
+    for: "00:05:00"
   - platform: time_pattern
+    id: time_change
     minutes: "/1"
     
 action:
@@ -481,6 +487,8 @@ action:
 
       # 4-1. 1분마다 확인해서 꺼지기
       - conditions:
+          - condition: trigger
+            id: time_change
           - condition: state
             entity_id: !input input_index_mode
             state: "on"
@@ -500,8 +508,12 @@ action:
 
       # 5) 불쾌지수·습도 변화
       - conditions:
-          - condition: trigger
-            id: discomfort_change
+          - condition: or
+            conditions:
+              - condition: trigger
+                id: discomfort_change
+              - condition: trigger
+                id: over_time
           - condition: state
             entity_id: !input input_boolean_switch
             state: "on"
