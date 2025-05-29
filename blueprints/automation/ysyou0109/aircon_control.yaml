@@ -40,11 +40,12 @@ blueprint:
           unit_of_measurement: "°C"
           mode: slider
     input_number_boost_duration:
-      name: 부스트 모드 지속 시간 (분)
+      name: 부스트 모드 지속 시간 (분),
+      description:  0으로 설정되면 부스트모드 비활성화
       default: 10
       selector:
         number:
-          min: 1
+          min: 0
           max: 60
           unit_of_measurement: 분
           mode: slider
@@ -106,7 +107,7 @@ blueprint:
 
     input_number_shutdown_delay:
       name: 종료 모드 송풍 유지 시간 (분)
-      description: 만약 에어컨의 자체 건조기능과 중복된다면 송풍유지 시간을 줄이세요 "0" 으로 해두면 기능 비활성화(에어컨 자체의 건조기능이 작동할지 안할지는 모릅니다.)
+      description: 만약 에어컨의 자체 건조기능과 중복된다면 송풍유지 시간을 줄이세요 "0" 으로 해두면 기능 비활성화(에어컨 자체의 건조기능이 작동할지 안할지는 기존에어컨의 설정에따라 다름.)
       default: 30
       selector:
         number:
@@ -218,6 +219,9 @@ action:
                   - condition: numeric_state
                     entity_id: !input temperature_sensor
                     above: !input input_number_boost_threshold
+                  - condition: template
+                    value_template: >
+                       {{ 0 < states('input_number.boost_duration') | float(0) }}
                 sequence:
                   - service: climate.set_temperature
                     target:
@@ -307,6 +311,9 @@ action:
                   - condition: numeric_state
                     entity_id: !input temperature_sensor
                     above: !input input_number_boost_threshold
+                  - condition: template
+                    value_template: >
+                       {{ 0 < states('input_number.boost_duration') | float(0) }}
                 sequence:
                   - service: climate.set_temperature
                     target:
@@ -397,6 +404,9 @@ action:
                   - condition: numeric_state
                     entity_id: !input temperature_sensor
                     above: !input input_number_boost_threshold
+                  - condition: template
+                    value_template: >
+                       {{ 0 < states('input_number.boost_duration') | float(0) }}
                 sequence:
                   - service: climate.set_temperature
                     target:
@@ -517,7 +527,7 @@ action:
                             target:
                               entity_id: !input input_dry_mode
 
-              # 불쾌지수 높음 → 냉방10분분
+              # 불쾌지수 높음 → 냉방10분
               - conditions:
                   - condition: template
                     value_template: >
@@ -550,7 +560,7 @@ action:
                       entity_id: !input input_index_mode
 
 
-              # 불쾌지수 낮음 → 송풍10분분
+              # 불쾌지수 낮음 → 송풍10분 
               - conditions:
                   - condition: template
                     value_template: >
@@ -578,11 +588,11 @@ action:
                   
              # 목표 불쾌지수 범위내 송풍 10+냉방5
               - conditions:
-                  - delay: "00:00:03"
                   - condition: state
                     entity_id: !input input_boolean_switch
                     state: "on"
                 sequence:
+                  - delay: "00:00:05"
                   - service: input_boolean.turn_on
                     target:
                       entity_id: !input input_index_mode
@@ -641,6 +651,9 @@ action:
                   - condition: state
                     entity_id: !input input_end_mode_now
                     state: "off"
+                  - condition: template
+                    value_template: >
+                       {{ 0 < states('input_number_shutdown_delay') | float(0) }}
                 sequence:
                   - service: climate.set_hvac_mode
                     target:
@@ -721,6 +734,9 @@ action:
                   - condition: state
                     entity_id: !input input_end_mode_now
                     state: "off"
+                  - condition: template
+                    value_template: >
+                       {{ 0 < states('input_number_shutdown_delay') | float(0) }}
                 sequence:
                   - service: input_boolean.turn_on
                     target:
