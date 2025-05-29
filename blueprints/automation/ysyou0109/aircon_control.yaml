@@ -17,6 +17,11 @@ blueprint:
       selector:
         entity:
           domain: input_boolean
+    input_time_tracker:
+      name: 켜진 시간 기록용 input_datetime
+      selector:
+        entity:
+          domain: input_datetime
     temperature_sensor:
       name: 실내 온도 센서
       selector:
@@ -164,7 +169,14 @@ trigger:
       - !input input_number_now_discomfort
       - !input input_number_target_discomfort
       - !input input_number_dehumid_threshold
-
+  - platform: state
+    id: index_on
+    entity_id: !input input_index_mode
+    from: "off"
+    to: "on"
+  - platform: time_pattern
+    minutes: "/1"
+    
 action:
   - variables:
       ac: !input climate_entity
@@ -183,6 +195,7 @@ action:
       humidity: "{{ states[hum_s].state | float(0) }}"
       discomfort_index: "{{ states[n_idx].state | float(0) }}"
       target_discomfort: "{{ states[tgt_idx].state   | float(0) }}"
+      time_tra: !input input_time_tracker
   - choose:
       # 1) 가상 스위치 ON
       - conditions:
@@ -452,11 +465,40 @@ action:
                   target:
                     entity_id: !input input_end_mode
 
+      # 4) 켜진시간 저장하고 켜진지 인덱스가 켜진지 20분 지나면 끄기 
+
+  - choose:
+      # 1. index_on 트리거 시 시간 저장
+      - conditions:
+          - condition: trigger
+            id: index_on
+        sequence:
+          - service: input_datetime.set_datetime
+            target:
+              entity_id: !input input_time_tracker
+            data:
+              datetime: "{{ now().isoformat() }}"
+
+      # 2. 5분마다 확인해서 꺼지기
+      - conditions:
+          - condition: state
+            entity_id: !input input_index_mode
+            state: "on"
+          - condition: template
+            value_template: >
+              {% set on_time = states[time_tra].state %}
+              {% if on_time in ['unknown', 'unavailable', None] %}
+                false
+              {% else %}
+                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 300 }}
+              {% endif %}
+        sequence:
+          - service: input_boolean.turn_off
+            target:
+              entity_id: !input input_index_mode
 
 
-
-
-      # 3) 불쾌지수·습도 변화
+      # 5) 불쾌지수·습도 변화
       - conditions:
           - condition: trigger
             id: discomfort_change
