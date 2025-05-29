@@ -18,7 +18,8 @@ blueprint:
         entity:
           domain: input_boolean
     input_time_tracker:
-      name: 켜진 시간 기록용 input_datetime
+      name: 불쾌지수모드 켜진 시간 기록
+      description: 불쾌지수 모드가 켜진상태에서 어떤오류가 발생할경우 대비용 현재시간과 비교하여 30분이넘으면 불쾌지수모드 종료되고 다시작동됨됨
       selector:
         entity:
           domain: input_datetime
@@ -490,7 +491,7 @@ action:
               {% if on_time in ['unknown', 'unavailable', None] %}
                 false
               {% else %}
-                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 300 }}
+                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 1800 }}
               {% endif %}
         sequence:
           - service: input_boolean.turn_off
