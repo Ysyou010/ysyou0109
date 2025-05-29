@@ -466,10 +466,9 @@ action:
                   target:
                     entity_id: !input input_end_mode
 
-      # 4) 켜진시간 저장하고 켜진지 인덱스가 켜진지 20분 지나면 끄기 
 
   - choose:
-      # 1. index_on 트리거 시 시간 저장
+      # 4. index_on 트리거 시 시간 저장
       - conditions:
           - condition: trigger
             id: index_on
@@ -480,7 +479,7 @@ action:
             data:
               datetime: "{{ now().isoformat() }}"
 
-      # 2. 5분마다 확인해서 꺼지기
+      # 4-1. 1분마다 확인해서 꺼지기
       - conditions:
           - condition: state
             entity_id: !input input_index_mode
@@ -520,7 +519,7 @@ action:
             state: "off"
         sequence:
           - choose:
-              # 제습 병행 제습 10분+냉방5분분
+              #5-1 제습 병행 제습 10분+냉방5분분
               - conditions:
                   - condition: numeric_state
                     entity_id: !input humidity_sensor
@@ -570,7 +569,7 @@ action:
                             target:
                               entity_id: !input input_dry_mode
 
-              # 불쾌지수 높음 → 냉방10분
+              # 5-2 불쾌지수 높음 → 냉방10분
               - conditions:
                   - condition: template
                     value_template: >
@@ -603,7 +602,7 @@ action:
                       entity_id: !input input_index_mode
 
 
-              # 불쾌지수 낮음 → 송풍10분 
+              # 5-3 불쾌지수 낮음 → 송풍10분 
               - conditions:
                   - condition: template
                     value_template: >
@@ -629,7 +628,7 @@ action:
                     target:
                       entity_id: !input input_index_mode
                   
-             # 목표 불쾌지수 범위내 송풍 10+냉방5
+             # 5-4 목표 불쾌지수 범위내 송풍 10+냉방5
               - conditions:
                   - condition: state
                     entity_id: !input input_boolean_switch
@@ -680,7 +679,7 @@ action:
                             entity_id: !input input_index_mode
 
 
-      # 4) 가상 스위치 OFF → 송풍 후 종료
+      # 6) 가상 스위치 OFF → 송풍 후 종료
       - conditions:
           - condition: trigger
             id: switch_off
@@ -764,7 +763,7 @@ action:
                     entity_id: !input climate_entity
 
 
-      # 5) 에어컨 OFF 감지 → 스위치 동기화 및 종료
+      # 7) 에어컨 OFF 감지 → 스위치 동기화 및 종료
       - conditions:
           - condition: trigger
             id: ac_off
