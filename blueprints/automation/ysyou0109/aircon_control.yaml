@@ -205,7 +205,6 @@ action:
       tgt_idx: !input input_number_target_discomfort
       end_mode: !input input_end_mode
       shut_delay: !input input_number_shutdown_delay
-      tol_num: "{{ states[tol].state | float(0) }}"
       boosttemp: "{{ states[dehum_thr].state | float(0) }}"
       dehumidity: "{{ states[dehum_thr].state | float(0) }}"
       temperature: "{{ states[temp_s].state | float(0) }}"
@@ -406,7 +405,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 부스트 OFF - 온도:{{ temperature }}/습도: {{ humidity }}/현재지수{{ discomfort_index }}}DI
+                                {{ now().strftime('%m-%d %H:%M') }} 부스트 OFF - 온도:{{ temperature }}/습도: {{ humidity }}/현재지수{{ discomfort_index }}}
             default:
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
@@ -678,7 +677,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 지수높음ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/목표지수:{{ target_discomfort }} ± {{tol_num }}
+                        {{ now().strftime('%m-%d %H:%M') }} 지수높음ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/목표지수:{{ target_discomfort }}
                   - delay: "00:10:00"
                   - choose:
                       - conditions:
@@ -691,7 +690,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 지수높음OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/목표지수:{{ target_discomfort }} ± {{tol_num }}
+                                {{ now().strftime('%m-%d %H:%M') }} 지수높음OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_index_mode
@@ -723,7 +722,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 지수낮음ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/목표지수:{{ target_discomfort }} ± {{tol_num }}
+                        {{ now().strftime('%m-%d %H:%M') }} 지수낮음ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
                   - delay: "00:10:00"
                   - choose:
                       - conditions:
@@ -736,7 +735,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 지수낮음OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/목표지수:{{ target_discomfort }} ± {{tol_num }}
+                                {{ now().strftime('%m-%d %H:%M') }} 지수낮음OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_index_mode
@@ -768,7 +767,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 지수적정ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/목표지수:{{ target_discomfort }} ± {{tol_num }}
+                        {{ now().strftime('%m-%d %H:%M') }} 지수적정ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
                   - delay: "00:10:00"
                   - choose:
                     - conditions:
@@ -805,7 +804,7 @@ action:
                                   entity_id: !input input_log
                                 data:
                                   value: >
-                                    {{ now().strftime('%m-%d %H:%M') }} 지수적정OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/목표지수:{{ target_discomfort }} ± {{tol_num }}
+                                    {{ now().strftime('%m-%d %H:%M') }} 지수적정OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input input_index_mode
