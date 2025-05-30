@@ -809,7 +809,22 @@ action:
                                 target:
                                   entity_id: !input input_index_mode
 
-      # 6) 가상 스위치 OFF → 송풍 후 종료
+
+
+      # 6) 에어컨 OFF 감지 → 스위치 동기화 및 종료
+      - conditions:
+          - condition: trigger
+            id: ac_off
+        sequence:
+          - delay: "00:00:01"
+          - service: input_boolean.turn_off
+            target:
+              entity_id: !input input_boolean_switch
+
+
+
+
+      # 67 가상 스위치 OFF → 송풍 후 종료
       - conditions:
           - condition: trigger
             id: switch_off
@@ -845,7 +860,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 종료모드 시작 - 온도: {{ temperature}}°C, 습도: {{ humidity }}%
+                        {{ now().strftime('%m-%d %H:%M') }} 종료모드 시작 - 온도: {{ temperature }}°C, 습도: {{ humidity }}%
                   - delay:
                       minutes: !input input_number_shutdown_delay
                   - choose:
@@ -878,7 +893,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 종료모드완료  시스템을 완존히 종료합니다. - 온도: {{ temperature}}°C, 습도: {{ humidity }}%
+                                {{ now().strftime('%m-%d %H:%M') }} 종료모드완료  시스템을 완전히 종료합니다. - 온도: {{ temperature }}°C, 습도: {{ humidity }}%
 
             default:
                 - service: input_boolean.turn_off
@@ -908,19 +923,11 @@ action:
                     entity_id: !input input_log
                   data:
                     value: >
-                      {{ now().strftime('%m-%d %H:%M') }} 종료모드작동하지 않음 완전히 종료합니다. - 온도: {{ temperature}}°C, 습도: {{ humidity }}%
+                      {{ now().strftime('%m-%d %H:%M') }} 종료모드작동하지 않음 완전히 종료합니다. - 온도: {{ temperature }}°C, 습도: {{ humidity }}%
 
 
-      # 7) 에어컨 OFF 감지 → 스위치 동기화 및 종료
-      - conditions:
-          - condition: trigger
-            id: ac_off
-        sequence:
-        sequence:
-          - delay: "00:00:01"
-          - service: input_boolean.turn_off
-            target:
-              entity_id: !input input_boolean_switch
+
+                  
                   
                   
                   
