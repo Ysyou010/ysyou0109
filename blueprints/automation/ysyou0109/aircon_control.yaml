@@ -700,7 +700,7 @@ action:
               - conditions:
                   - condition: template
                     value_template: >
-                      {{ discomfort_index < (target_discomfort + tol) }}
+                      {{ discomfort_index < (target_discomfort - tol) }}
                 sequence:
                   - delay: "00:00:03"
                   - service: input_boolean.turn_on
