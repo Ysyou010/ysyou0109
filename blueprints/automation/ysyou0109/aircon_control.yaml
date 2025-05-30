@@ -916,23 +916,11 @@ action:
           - condition: trigger
             id: ac_off
         sequence:
-          - choose:
-              - conditions:
-                  - condition: state
-                    entity_id: !input input_end_mode
-                    state: "on"
-                  - condition: state
-                    entity_id: !input input_end_mode_now
-                    state: "off"
-                  - condition: template
-                    value_template: >
-                       {{ 0 < shut_delay }}
-                sequence:
-                  - service: input_boolean.turn_off
-                    target:
-                      entity_id: !input input_boolean_switch
-                  - delay: "00:00:01"
-                  
+        sequence:
+          - delay: "00:00:01"
+          - service: input_boolean.turn_off
+            target:
+              entity_id: !input input_boolean_switch
                   
                   
                   
