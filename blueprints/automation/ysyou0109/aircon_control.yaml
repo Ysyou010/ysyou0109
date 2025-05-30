@@ -92,7 +92,9 @@ blueprint:
           domain: sensor
     input_number_target_discomfort:
       name: 목표 불쾌지수
-      description: 사용자가 쾌적하게 느끼는 목표 불쾌지수를 설정합니다. (예: 68 이하 쾌적, 68–73 약간 불쾌, 73–77 불쾌감 시작)
+      description: >
+        사용자가 쾌적하게 느끼는 목표 불쾌지수를 설정합니다.
+        (예: 68 이하 쾌적, 68–73 약간 불쾌, 73–77 불쾌감 시작)
       selector:
         entity:
           domain: input_number
