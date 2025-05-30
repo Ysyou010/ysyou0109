@@ -1,25 +1,25 @@
 blueprint:
   name: 통합 에어컨 자동화 (부스트·일반·제습·종료)
   description: >
-    가상 스위치, 실내 온·습도 센서, 목표 불쾌지수 등을 이용해
-    부스트 모드, 일반 모드, 제습 병행 모드, 종료 모드를 하나의 블루프린트로 통합합니다.
+    이 블루프린트는 가상 스위치와 실내 온·습도 센서, 그리고 목표 불쾌지수를 기반으로 에어컨을 자동 제어합니다.
+    부스트 모드, 일반 냉방, 제습 병행 모드, 종료 모드를 하나로 통합하여, 사용자의 환경과 설정값에 따라 최적의 냉방 모드를 자동으로 선택하고 전환합니다
   domain: automation
   input:
     climate_entity:
       name: 에어컨 클라이밋 엔티티
-      description: 작동할 에어컨의 CLIMATE를 지정
+      description: 자동화에 사용할 에어컨(CLIMATE) 엔티티를 선택하세요.
       selector:
         entity:
           domain: climate
     input_boolean_switch:
       name: 가상 스위치
-      description: 에어컨과 연동하여 에어컨의 작동상태를 확인하고 에어컨 on/off명령을 내리는 기능을 수행
+      description: 에어컨 상태를 추적하고, 에어컨을 켜거나 끌 수 있도록 제어하는 가상 스위치입니다.
       selector:
         entity:
           domain: input_boolean
     input_time_tracker:
       name: 불쾌지수모드 켜진 시간 기록
-      description: 불쾌지수 모드가 켜진상태에서 어떤오류가 발생할경우 대비용 현재시간과 비교하여 20분이넘으면 불쾌지수모드 종료되고 다시작동됨됨
+      description: 불쾌지수 모드가 켜진 이후 경과 시간을 기록합니다. 오류 발생 시 20분이 경과하면 모드를 종료 후 자동 재시작합니다.
       selector:
         entity:
           domain: input_datetime
@@ -37,7 +37,7 @@ blueprint:
           device_class: humidity
     input_number_boost_threshold:
       name: 부스트 모드 진입 기준 온도 (°C)
-      description: 설정한 온도보다 현재온도가 높으면 부스트 모드 작동합니다.
+      description: 현재 온도가 이 값보다 높으면 부스트 모드가 작동합니다.
       default: 24
       selector:
         number:
@@ -47,7 +47,7 @@ blueprint:
           mode: slider
     input_number_boost_duration:
       name: 부스트 모드 지속 시간 (분),
-      description:  0으로 설정되면 부스트모드 비활성화
+      description:  부스트 모드의 지속 시간을 설정합니다. 0으로 설정하면 부스트 모드가 비활성화됩니다.
       default: 10
       selector:
         number:
@@ -64,7 +64,7 @@ blueprint:
 
     input_number_dehumid_threshold:
       name: 제습 병행 기준 습도 (%)
-      description: 설정습도보다 높을경우 제습기능을우선합니다.
+      description: 현재 습도가 이 값보다 높으면 제습 기능이 우선 실행됩니다.
       selector:
         entity:
           domain: input_number
@@ -75,6 +75,7 @@ blueprint:
           domain: input_boolean
     input_number_general_temperature:
       name: 일반냉방 모드 설정 온도 (°C)
+      description: 일반 냉방 모드에서 사용할 설정 온도입니다.
       default: 23
       selector:
         number:
@@ -85,19 +86,19 @@ blueprint:
           
     input_number_now_discomfort:
       name: 현재 불쾌지수
-      description: 템플릿센서로 계산된 현재 불쾌지수(DI)
+      description: 현재 불쾌지수를 나타내는 템플릿 센서입니다.(DI)
       selector:
         entity:
           domain: sensor
     input_number_target_discomfort:
       name: 목표 불쾌지수
-      description: 내가 원하는 목표 불쾌지수(68 이하 쾌적, 68–73 약간 불쾌, 73–77 불쾌감 시작)
+      description: 사용자가 쾌적하게 느끼는 목표 불쾌지수를 설정합니다. (예: 68 이하 쾌적, 68–73 약간 불쾌, 73–77 불쾌감 시작)
       selector:
         entity:
           domain: input_number
     input_number_tolerance:
       name: 불쾌지수 허용 오차
-      description: 목표불쾌지수의 상하 오차- 목표오차범위보다 위인지 아래인지에 따라 작동이 바뀝니다.
+      description: 목표 불쾌지수에 대한 허용 범위를 설정합니다. 오차 범위 밖일 경우 모드가 전환됩니다.
       default: 0.1
       selector:
         number:
@@ -113,7 +114,7 @@ blueprint:
 
     input_number_shutdown_delay:
       name: 종료 모드 송풍 유지 시간 (분)
-      description: 만약 에어컨의 자체 건조기능과 중복된다면 송풍유지 시간을 줄이세요 "0" 으로 해두면 기능 비활성화(에어컨 자체의 건조기능이 작동할지 안할지는 기존에어컨의 설정에따라 다름.)
+      description: 에어컨이 꺼진 후 송풍을 유지할 시간을 설정합니다. 0으로 설정하면 종료 모드가 비활성화됩니다.(비활성화 시 에어컨 자체의 건조기능이 작동할지 안할지는 기존에어컨의 설정에따라 다름.)
       default: 30
       selector:
         number:
@@ -123,7 +124,7 @@ blueprint:
           mode: slider
     input_end_mode:
       name: 종료모드 작동대기중
-      description: 에어컨이 켜지고 10분이 지나면 켜지고 에어컨이 종료되면 송풍 유지시간동안 작동되고 에어컨이 꺼집니다. (단, 에어컨자체의 건조시간과 중복 실행될수있습니다.) 또한, 종료모드가 작동중 HA가 재시작하거나 yaml을 다시읽어오면 자동종료가 되지않을수있습니다.
+      description: 에어컨이 작동 후 10분이 지나면 종료 모드 대기 상태로 전환되며, 에어컨 종료 시 송풍 유지 후 완전히 꺼지도록 설정됩니다. (단, 에어컨자체의 건조시간과 중복 실행될수있습니다.) 
       selector:
         entity:
           domain: input_boolean
@@ -134,7 +135,7 @@ blueprint:
           domain: input_boolean
     input_log:
       name: 로그 저장용
-      description: 작동상태를 저장하기위한 로그입니다.
+      description: 에어컨 자동화의 작동 상태 및 변경 내용을 저장하는 로그입니다..
       selector:
         entity:
           domain: input_text
