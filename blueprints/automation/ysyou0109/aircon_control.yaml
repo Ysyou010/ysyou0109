@@ -270,7 +270,9 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }}  부스트 ON - 온도:{{ temperature }}/기준: {{ boosttemp }}/현재지수 {{ discomfort_index }}
+                        {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 ON 🚀
+                        온도: {{ temperature }}℃ (기준: {{ boosttemp }}℃)
+                        지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
                   - choose:
@@ -301,7 +303,10 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 부스트 OFF - 온도:{{ temperature }}/습도: {{ humidity }}/현재지수{{ discomfort_index }}
+                                {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 OFF 📴
+                                온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                                지수: {{ discomfort_index }}
+
             default:
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
@@ -374,7 +379,9 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 부스트 ON - 온도:{{ temperature }}/기준: {{ boosttemp }}/현재지수 {{ discomfort_index }}
+                        {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 ON 🚀
+                        온도: {{ temperature }}℃ (기준: {{ boosttemp }}℃)
+                        지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
                   - choose:
@@ -405,7 +412,9 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 부스트 OFF - 온도:{{ temperature }}/습도: {{ humidity }}/현재지수{{ discomfort_index }}}
+                                {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 OFF 📴
+                                온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                                지수: {{ discomfort_index }}
             default:
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
@@ -479,7 +488,9 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 부스트 ON - 온도:{{ temperature }}/기준: {{ boosttemp }}/현재지수 {{ discomfort_index }}
+                        {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 ON 🚀
+                        온도: {{ temperature }}℃ (기준: {{ boosttemp }}℃)
+                        지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
                   - choose:
@@ -510,7 +521,9 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 부스트 OFF - 온도:{{ temperature }}/습도: {{ humidity }}/현재지수{{ discomfort_index }}
+                                {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 OFF 📴
+                                온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                                지수: {{ discomfort_index }}
             default:
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
@@ -608,7 +621,8 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }}  제습ON/온도:{{ temperature }}/습도:{{ humidity }}/기준습도:{{ dehumidity }}
+                        {{ now().strftime('%m-%d %H:%M') }} | 제습 모드 ON 💧
+                        온도: {{ temperature }}℃ / 습도: {{ humidity }}% (기준: {{ dehumidity }}%)
                   - delay: "00:10:00"
                   - choose:
                       - conditions:
@@ -642,7 +656,9 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }}  제습OFF/온도:{{ temperature }}/습도:{{ humidity }}/기준습도:{{ dehumidity }}
+                                {{ now().strftime('%m-%d %H:%M') }} | 제습 모드 OFF 🔁
+                                온도: {{ temperature }}℃ / 습도: {{ humidity }}% (기준: {{ dehumidity }}%)
+
 
 
               # 5-2 불쾌지수 높음 → 냉방10분
@@ -677,7 +693,10 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 지수높음ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/목표지수:{{ target_discomfort }}
+                        {{ now().strftime('%m-%d %H:%M') }} | 지수 높음 감지 - 냉방 시작 🌡️
+                        온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                        지수: {{ discomfort_index }} > 목표: {{ target_discomfort }} (+{{ tol }})
+
                   - delay: "00:10:00"
                   - choose:
                       - conditions:
@@ -690,7 +709,10 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 지수높음OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
+                                {{ now().strftime('%m-%d %H:%M') }} | 냉방 종료 (지수 높음 대응) 📴
+                                온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                                지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
+
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_index_mode
@@ -722,7 +744,10 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 지수낮음ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
+                        {{ now().strftime('%m-%d %H:%M') }} | 지수 낮음 감지 - 송풍 시작 🍃
+                        온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                        지수: {{ discomfort_index }} < 목표: {{ target_discomfort }} (-{{ tol }})
+
                   - delay: "00:10:00"
                   - choose:
                       - conditions:
@@ -735,7 +760,10 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 지수낮음OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
+                                {{ now().strftime('%m-%d %H:%M') }} | 송풍 종료 (지수 낮음 대응) 📴
+                                온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                                지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
+
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_index_mode
@@ -767,7 +795,10 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 지수적정ON/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
+                        {{ now().strftime('%m-%d %H:%M') }} | 지수 적정 - 송풍 후 냉방 준비 ⚖️
+                        온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                        지수: {{ discomfort_index }} ≈ 목표: {{ target_discomfort }}
+
                   - delay: "00:10:00"
                   - choose:
                     - conditions:
@@ -804,7 +835,10 @@ action:
                                   entity_id: !input input_log
                                 data:
                                   value: >
-                                    {{ now().strftime('%m-%d %H:%M') }} 지수적정OFF/온도:{{ temperature }}/습도:{{ humidity }}/지수 {{ discomfort_index }}/"목표지수:{{ target_discomfort }}"
+                                    {{ now().strftime('%m-%d %H:%M') }} | 지수 적정 모드 종료 ✅
+                                    온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                                    지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
+
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input input_index_mode
@@ -860,7 +894,9 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} 종료ON - 온도:{{ temperature }}/습도:{{ humidity }}
+                        {{ now().strftime('%m-%d %H:%M') }} | 종료 모드 ON 🛑
+                        온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+
                   - delay:
                       minutes: !input input_number_shutdown_delay
                   - choose:
@@ -893,7 +929,10 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} 종료ON - 시스템을 완전히 종료합니다. 온도:{{ temperature }}/습도:{{ humidity }}
+                                {{ now().strftime('%m-%d %H:%M') }} | 시스템 종료 OFF 🛑
+                                시스템을 완전히 종료합니다.
+                                온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+
 
             default:
                 - service: input_boolean.turn_off
