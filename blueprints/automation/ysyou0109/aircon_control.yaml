@@ -645,7 +645,7 @@ action:
                     target:
                       entity_id: !input climate_entity
                     data:
-                      fan_mode: high_fan_mode
+                      fan_mode: '{{ boost_fan }}'
                   - service: input_text.set_value
                     target:
                       entity_id: !input input_log
@@ -717,7 +717,7 @@ action:
                     target:
                       entity_id: !input climate_entity
                     data:
-                      fan_mode: high_fan_mode
+                      fan_mode: '{{ boost_fan }}'
                   - service: input_text.set_value
                     target:
                       entity_id: !input input_log
@@ -915,7 +915,7 @@ action:
                     target:
                       entity_id: !input climate_entity
                     data:
-                      fan_mode: high_fan_mode
+                      fan_mode: '{{ boost_fan }}'
                   - service: input_boolean.turn_on
                     target:
                       entity_id: !input input_end_mode_now
@@ -993,6 +993,13 @@ action:
                   data:
                     value: >
                       {{ now().strftime('%m-%d %H:%M') }} 종료모드작동하지 않음 완전히 종료합니다. 온도:{{ temperature }}/습도:{{ humidity }}
+
+
+
+                  
+                  
+                  
+                  
 
 
 mode: parallel
