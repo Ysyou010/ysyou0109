@@ -300,8 +300,8 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 ON 🚀
-                        온도: {{ temperature }}℃ (기준: {{ boosttemp }}℃)
+                        {{ now().strftime('%m-%d %H:%M') }} |🚀부스트 모드 ON 
+                        온도: {{ temperature }}℃ 습도 : {{ boosttemp }}℃  기준 :{{ boost_thr }}
                         지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
@@ -333,7 +333,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 OFF 📴
+                                {{ now().strftime('%m-%d %H:%M') }} |📴부스트 모드 OFF 
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }}
 
@@ -409,8 +409,8 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 ON 🚀
-                        온도: {{ temperature }}℃ (기준: {{ boosttemp }}℃)
+                        {{ now().strftime('%m-%d %H:%M') }} |🚀부스트 모드 ON 
+                        온도: {{ temperature }}℃ 습도 : {{ boosttemp }}℃  기준 :{{ boost_thr }}
                         지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
@@ -442,7 +442,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 OFF 📴
+                                {{ now().strftime('%m-%d %H:%M') }} |📴부스트 모드 OFF 
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }}
             default:
@@ -518,8 +518,8 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 ON 🚀
-                        온도: {{ temperature }}℃ (기준: {{ boosttemp }}℃)
+                        {{ now().strftime('%m-%d %H:%M') }} |🚀부스트 모드 ON 
+                        온도: {{ temperature }}℃ 습도 : {{ boosttemp }}℃  기준 :{{ boost_thr }}
                         지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
@@ -551,7 +551,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} | 부스트 모드 OFF 📴
+                                {{ now().strftime('%m-%d %H:%M') }} |📴부스트 모드 OFF 
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }}
             default:
@@ -651,7 +651,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | 제습 모드 ON 💧
+                        {{ now().strftime('%m-%d %H:%M') }} |💧제습 모드 ON
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}% (기준: {{ dehumidity }}%)
                   - delay: "00:10:00"
                   - choose:
@@ -686,7 +686,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} | 제습 모드 OFF 🔁
+                                {{ now().strftime('%m-%d %H:%M') }} |🔁제습 모드 OFF
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}% (기준: {{ dehumidity }}%)
 
 
@@ -723,7 +723,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | 지수 높음 감지 - 냉방 시작 🌡️
+                        {{ now().strftime('%m-%d %H:%M') }} |🌡지수 높음 시작 (냉방10분) ️
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                         지수: {{ discomfort_index }} > 목표: {{ target_discomfort }} (+{{ tol }})
 
@@ -739,7 +739,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} | 냉방 종료 (지수 높음 대응) 📴
+                                {{ now().strftime('%m-%d %H:%M') }} |📴지수 높음 종료 
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
 
@@ -774,7 +774,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | 지수 낮음 감지 - 송풍 시작 🍃
+                        {{ now().strftime('%m-%d %H:%M') }} |🍃지수 낮음 시작(송풍10분분))
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                         지수: {{ discomfort_index }} < 목표: {{ target_discomfort }} (-{{ tol }})
 
@@ -790,7 +790,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} | 송풍 종료 (지수 낮음 대응) 📴
+                                {{ now().strftime('%m-%d %H:%M') }} |📴지수 낮음 종료
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
 
@@ -825,7 +825,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | 지수 적정 -  송풍10분 냉방5분 ⚖️
+                        {{ now().strftime('%m-%d %H:%M') }} |⚖️지수 적정시작(송풍10분 냉방5분) 
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                         지수: {{ discomfort_index }} ≈ 목표: {{ target_discomfort }}
 
@@ -865,7 +865,7 @@ action:
                                   entity_id: !input input_log
                                 data:
                                   value: >
-                                    {{ now().strftime('%m-%d %H:%M') }} | 지수 적정 모드 종료 ✅
+                                    {{ now().strftime('%m-%d %H:%M') }} |✅지수 적정 모드 종료 
                                     온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                     지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
 
@@ -924,7 +924,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | 종료 모드 ON 🛑
+                        {{ now().strftime('%m-%d %H:%M') }} |🛑종료 모드 ON 
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
 
                   - delay:
@@ -959,7 +959,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} | 시스템 종료 OFF 🛑
+                                {{ now().strftime('%m-%d %H:%M') }} |🛑시스템 종료 OFF 
                                 시스템을 완전히 종료합니다.
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
 
@@ -992,7 +992,7 @@ action:
                     entity_id: !input input_log
                   data:
                     value: >
-                      {{ now().strftime('%m-%d %H:%M') }} 종료모드작동하지 않음 완전히 종료합니다. 온도:{{ temperature }}/습도:{{ humidity }}
+                      {{ now().strftime('%m-%d %H:%M') }} 종료모드작동하지 않음 |🛑시스템 종료 OFF  온도:{{ temperature }}/습도:{{ humidity }}
 
 
 
