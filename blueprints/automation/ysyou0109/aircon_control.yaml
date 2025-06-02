@@ -334,11 +334,27 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} |OFF 📴부스트모드 
+                                {{ now().strftime('%m-%d %H:%M') }} | OFF 📴부스트모드 
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }}
 
             default:
+                - service: climate.set_hvac_mode
+                  target:
+                     entity_id: !input climate_entity
+                  data:
+                    hvac_mode: cool
+                - service: climate.set_temperature
+                  target:
+                    entity_id: !input climate_entity
+                  data:
+                    temperature: !input input_number_general_temperature
+                - delay: "00:00:01"
+                - service: climate.set_fan_mode
+                  target:
+                    entity_id: !input climate_entity
+                  data:
+                    fan_mode: '{{ gen_fan_mode }}'
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
                   target:
@@ -410,7 +426,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} |ON 🚀부스트모드
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 🚀부스트모드
                         온도: {{ temperature }}℃ 습도 : {{ boosttemp }}℃  기준 :{{ boosttemp }}
                         지수: {{ discomfort_index }}
                   - delay:
@@ -443,10 +459,26 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} |OFF 📴부스트모드 
+                                {{ now().strftime('%m-%d %H:%M') }} | OFF 📴부스트모드 
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }}
             default:
+                - service: climate.set_hvac_mode
+                  target:
+                     entity_id: !input climate_entity
+                  data:
+                    hvac_mode: cool
+                - service: climate.set_temperature
+                  target:
+                    entity_id: !input climate_entity
+                  data:
+                    temperature: !input input_number_general_temperature
+                - delay: "00:00:01"
+                - service: climate.set_fan_mode
+                  target:
+                    entity_id: !input climate_entity
+                  data:
+                    fan_mode: '{{ gen_fan_mode }}'
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
                   target:
@@ -519,7 +551,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} |ON 🚀부스트모드
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 🚀부스트모드
                         온도: {{ temperature }}℃ 습도 : {{ humidity }}℃  기준 :{{ boosttemp }}
                         지수: {{ discomfort_index }}
                   - delay:
@@ -552,10 +584,26 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} |OFF 📴부스트모드 
+                                {{ now().strftime('%m-%d %H:%M') }} | OFF 📴부스트모드 
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }}
             default:
+                - service: climate.set_hvac_mode
+                  target:
+                     entity_id: !input climate_entity
+                  data:
+                    hvac_mode: cool
+                - service: climate.set_temperature
+                  target:
+                    entity_id: !input climate_entity
+                  data:
+                    temperature: !input input_number_general_temperature
+                - delay: "00:00:01"
+                - service: climate.set_fan_mode
+                  target:
+                    entity_id: !input climate_entity
+                  data:
+                    fan_mode: '{{ gen_fan_mode }}'
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
                   target:
@@ -660,7 +708,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} |ON 💧제습모드
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 💧제습모드
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}% (기준: {{ dehumidity }}%)
                   - delay: "00:10:00"
                   - choose:
@@ -686,6 +734,9 @@ action:
                               entity_id: !input climate_entity
                             data:
                               temperature: !input input_number_general_temperature
+                          - service: input_boolean.turn_on
+                            target:
+                              entity_id: !input input_end_mode
                           - delay: "00:05:00"
                           - service: input_boolean.turn_off
                             target:
@@ -695,7 +746,7 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} |OFF 🔁제습모드
+                                {{ now().strftime('%m-%d %H:%M') }} | OFF 🔁제습모드
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}% (기준: {{ dehumidity }}%)
 
 
@@ -733,7 +784,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} |ON 🌡지수높음(냉방10분) ️
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 🌡지수높음(냉방10분) ️
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                         지수: {{ discomfort_index }} > 목표: {{ target_discomfort }} (+{{ tol }})
 
@@ -749,10 +800,12 @@ action:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} |OFF 📴지수높음
+                                {{ now().strftime('%m-%d %H:%M') }} | OFF 📴지수높음
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
-
+                          - service: input_boolean.turn_on
+                            target:
+                              entity_id: !input input_end_mode
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_index_mode
@@ -784,7 +837,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} |ON 🍃지수낮음(송풍10분))
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 🍃지수낮음(송풍10분)
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                         지수: {{ discomfort_index }} < 목표: {{ target_discomfort }} (-{{ tol }})
 
@@ -798,12 +851,15 @@ action:
                           - service: input_boolean.turn_off
                             target:
                               entity_id: !input input_index_mode
+                          - service: input_boolean.turn_on
+                            target:
+                              entity_id: !input input_end_mode
                           - service: input_text.set_value
                             target:
                               entity_id: !input input_log
                             data:
                               value: >
-                                {{ now().strftime('%m-%d %H:%M') }} |OFF 📴지수낮음
+                                {{ now().strftime('%m-%d %H:%M') }} | OFF 📴지수낮음
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
 
@@ -835,10 +891,9 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} |ON ⚖️지수적정(송풍10분 냉방5분) 
+                        {{ now().strftime('%m-%d %H:%M') }} | ON ⚖️지수적정(송풍10분 냉방5분) 
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                         지수: {{ discomfort_index }} ≈ 목표: {{ target_discomfort }}
-
                   - delay: "00:10:00"
                   - choose:
                     - conditions:
@@ -873,12 +928,15 @@ action:
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input input_index_mode
+                              - service: input_boolean.turn_on
+                                target:
+                                  entity_id: !input input_end_mode
                               - service: input_text.set_value
                                 target:
                                   entity_id: !input input_log
                                 data:
                                   value: >
-                                    {{ now().strftime('%m-%d %H:%M') }} |OFF ✅지수적정 
+                                    {{ now().strftime('%m-%d %H:%M') }} | OFF ✅지수적정 
                                     온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                     지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
 
@@ -933,7 +991,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} |ON 🛑종료모드 
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 🛑종료모드 
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
 
                   - delay:
