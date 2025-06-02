@@ -774,7 +774,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} |🍃지수 낮음 시작(송풍10분분))
+                        {{ now().strftime('%m-%d %H:%M') }} |🍃지수 낮음 시작(송풍10분))
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                         지수: {{ discomfort_index }} < 목표: {{ target_discomfort }} (-{{ tol }})
 
@@ -785,6 +785,9 @@ action:
                             entity_id: !input input_boolean_switch
                             state: "on"
                         sequence:
+                          - service: input_boolean.turn_off
+                            target:
+                              entity_id: !input input_index_mode
                           - service: input_text.set_value
                             target:
                               entity_id: !input input_log
@@ -794,9 +797,6 @@ action:
                                 온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                 지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
 
-                          - service: input_boolean.turn_off
-                            target:
-                              entity_id: !input input_index_mode
                           
                   
              # 5-4 목표 불쾌지수 범위내 송풍 10+냉방5
@@ -860,6 +860,9 @@ action:
                                 entity_id: !input input_boolean_switch
                                 state: "on"
                             sequence:
+                              - service: input_boolean.turn_off
+                                target:
+                                  entity_id: !input input_index_mode
                               - service: input_text.set_value
                                 target:
                                   entity_id: !input input_log
@@ -869,18 +872,13 @@ action:
                                     온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                     지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
 
-                              - service: input_boolean.turn_off
-                                target:
-                                  entity_id: !input input_index_mode
 
 
-
-      # 6) 에어컨 OFF 감지 → 스위치 동기화 및 종료
+      # 6) 에어컨 OFF 감지 → 스위치 동기화 → #7
       - conditions:
           - condition: trigger
             id: ac_off
         sequence:
-          - delay: "00:00:01"
           - service: input_boolean.turn_off
             target:
               entity_id: !input input_boolean_switch
@@ -888,7 +886,7 @@ action:
 
 
 
-      # 67 가상 스위치 OFF → 송풍 후 종료
+      # 7 가상 스위치 OFF → 송풍 후 종료
       - conditions:
           - condition: trigger
             id: switch_off
@@ -906,6 +904,7 @@ action:
                     value_template: >
                        {{ 0 < shut_delay }}
                 sequence:
+                  - delay: "00:00:01"
                   - service: climate.set_hvac_mode
                     target:
                       entity_id: !input climate_entity
@@ -1003,3 +1002,4 @@ action:
 
 
 mode: parallel
+max: 2
