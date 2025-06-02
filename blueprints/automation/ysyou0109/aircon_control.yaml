@@ -630,7 +630,7 @@ action:
               {% if on_time in ['unknown', 'unavailable', None] %}
                 false
               {% else %}
-                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 850 }}
+                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 600 }}
               {% endif %}
         sequence:
           - choose:
