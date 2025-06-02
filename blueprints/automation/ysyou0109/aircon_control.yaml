@@ -231,6 +231,7 @@ action:
       tol: !input input_number_tolerance
       n_idx: !input input_number_now_discomfort
       tgt_idx: !input input_number_target_discomfort
+      idx_mode: !input input_index_mode
       gen_fan_mode: !input general_aircon_fan_mode
       high_fan_mode: !input high_aircon_fan_mode
       end_mode: !input input_end_mode
@@ -623,6 +624,14 @@ action:
           - condition: state
             entity_id: !input input_end_mode_now
             state: "off"
+          - condition: template
+            value_template: >
+              {% set on_time = states[time_tra].state %}
+              {% if on_time in ['unknown', 'unavailable', None] %}
+                false
+              {% else %}
+                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 850 }}
+              {% endif %}
         sequence:
           - choose:
               #5-1 제습 병행 제습 10분+냉방5분
@@ -696,6 +705,7 @@ action:
                   - condition: template
                     value_template: >
                       {{ discomfort_index > (target_discomfort + tol) }}
+                  
                 sequence:
                   - delay: "00:00:03"
                   - service: input_boolean.turn_on
@@ -998,8 +1008,5 @@ action:
                   
                   
                   
-                  
-
-
 mode: parallel
 max: 2
