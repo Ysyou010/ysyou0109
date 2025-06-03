@@ -219,8 +219,10 @@ trigger:
     
 action:
   - variables:
+  #트리거스위치
       ac: !input climate_entity
       sw: !input input_boolean_switch
+      
       temp_s: !input temperature_sensor
       hum_s: !input humidity_sensor
       gen_t: !input input_number_general_temperature
@@ -231,12 +233,15 @@ action:
       tol: !input input_number_tolerance
       n_idx: !input input_number_now_discomfort
       tgt_idx: !input input_number_target_discomfort
+      
       idx_mode: !input input_index_mode
       gen_fan_mode: !input general_aircon_fan_mode
       high_fan_mode: !input high_aircon_fan_mode
       end_mode: !input input_end_mode
       shut_delay: !input input_number_shutdown_delay
-      boosttemp: "{{ states[dehum_thr].state | float(0) }}"
+      
+      
+
       dehumidity: "{{ states[dehum_thr].state | float(0) }}"
       temperature: "{{ states[temp_s].state | float(0) }}"
       humidity: "{{ states[hum_s].state | float(0) }}"
@@ -301,8 +306,8 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | ON 🚀부스트모드
-                        온도: {{ temperature }}℃ 습도 : {{ boosttemp }}℃  기준 :{{ boosttemp }}
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 🚀부스트모드({{boost_dur }}분)
+                        온도: {{ temperature }}℃ 습도 : {{ humidity }}℃  기준 :{{ boost_thr }}  
                         지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
@@ -426,8 +431,8 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | ON 🚀부스트모드
-                        온도: {{ temperature }}℃ 습도 : {{ boosttemp }}℃  기준 :{{ boosttemp }}
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 🚀부스트모드({{boost_dur }}분)
+                        온도: {{ temperature }}℃ 습도 : {{ humidity }}℃  기준 :{{ boost_thr }}
                         지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
@@ -551,8 +556,8 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | ON 🚀부스트모드
-                        온도: {{ temperature }}℃ 습도 : {{ humidity }}℃  기준 :{{ boosttemp }}
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 🚀부스트모드({{boost_dur }}분)
+                        온도: {{ temperature }}℃ 습도 : {{ humidity }}℃  기준 :{{ boost_thr }}
                         지수: {{ discomfort_index }}
                   - delay:
                       minutes: !input input_number_boost_duration
@@ -708,7 +713,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | ON 💧제습모드
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 💧제습모드 ({{ dehum_thr }}분)
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}% (기준: {{ dehumidity }}%)
                   - delay: "00:10:00"
                   - choose:
@@ -716,6 +721,14 @@ action:
                           - condition: state
                             entity_id: !input input_boolean_switch
                             state: "on"
+                          - condition: template
+                            value_template: >
+                              {% set on_time = states[time_tra].state %}
+                              {% if on_time in ['unknown', 'unavailable', None] %}
+                                false
+                              {% else %}
+                                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 500 }}
+                              {% endif %}
                         sequence:
                           - service: climate.set_hvac_mode
                             target:
@@ -794,6 +807,14 @@ action:
                           - condition: state
                             entity_id: !input input_boolean_switch
                             state: "on"
+                          - condition: template
+                            value_template: >
+                              {% set on_time = states[time_tra].state %}
+                              {% if on_time in ['unknown', 'unavailable', None] %}
+                                false
+                              {% else %}
+                                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 500 }}
+                              {% endif %}
                         sequence:
                           - service: input_text.set_value
                             target:
@@ -847,6 +868,14 @@ action:
                           - condition: state
                             entity_id: !input input_boolean_switch
                             state: "on"
+                          - condition: template
+                            value_template: >
+                              {% set on_time = states[time_tra].state %}
+                              {% if on_time in ['unknown', 'unavailable', None] %}
+                                false
+                              {% else %}
+                                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 500 }}
+                              {% endif %}
                         sequence:
                           - service: input_boolean.turn_off
                             target:
@@ -900,6 +929,14 @@ action:
                         - condition: state
                           entity_id: !input input_boolean_switch
                           state: "on"
+                        - condition: template
+                          value_template: >
+                            {% set on_time = states[time_tra].state %}
+                            {% if on_time in ['unknown', 'unavailable', None] %}
+                              false
+                            {% else %}
+                              {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 500 }}
+                            {% endif %}
                       sequence:
                         - service: climate.set_hvac_mode
                           target:
@@ -986,6 +1023,9 @@ action:
                   - service: input_boolean.turn_on
                     target:
                       entity_id: !input input_end_mode_now
+                  - service: input_boolean.turn_off
+                    target:
+                      entity_id: !input input_index_mode
                   - service: input_text.set_value
                     target:
                       entity_id: !input input_log
