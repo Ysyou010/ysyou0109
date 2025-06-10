@@ -1,0 +1,51 @@
+blueprint:
+  name: 불쾌지수 계산기
+  description: 온도와 습도를 기반으로 불쾌지수를 계산하고 input_number에 저장합니다.
+  domain: automation
+  input:
+    temperature_sensor:
+      name: 온도 센서
+      selector:
+        entity:
+          domain: sensor
+          device_class: temperature
+    humidity_sensor:
+      name: 습도 센서
+      selector:
+        entity:
+          domain: sensor
+          device_class: humidity
+    input_index_number:
+      name: 현재불쾌지수
+      selector:
+        entity:
+          domain: input_number
+
+trigger:
+  - platform: time_pattern
+    minutes: "/1"
+
+variables:
+  temp_s: !input temperature_sensor
+  hum_s: !input humidity_sensor
+  temperature: "{{ states[temp_s].state | float(0) }}"
+  humidity: "{{ states[hum_s].state | float(0) }}"
+  set_value_index: !input input_index_number
+  discomfort_index: >-
+    {{
+      (
+        0.81 * temperature +
+        0.01 * humidity * (0.99 * temperature - 14.3) +
+        46.3
+      ) | round(1)
+    }}
+
+action:
+  - alias: "불쾌지수 계산 결과를 input_number에 저장"
+    action: input_number.set_value
+    target:
+      entity_id:  !input input_index_number
+    data:
+      value: "{{ discomfort_index }}"
+
+mode: single
