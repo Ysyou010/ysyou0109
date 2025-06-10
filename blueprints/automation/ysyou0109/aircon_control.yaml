@@ -59,7 +59,7 @@ blueprint:
       selector:
         number:
           min: 0
-          max: 60
+          max: 30
           unit_of_measurement: 분
           mode: slider
     input_boost_mode:
@@ -94,7 +94,7 @@ blueprint:
       description: 현재 불쾌지수를 나타내는 템플릿 센서입니다.(DI)
       selector:
         entity:
-          domain: sensor
+          domain: input_number
     input_number_target_discomfort:
       name: 목표 불쾌지수
       description: >
@@ -143,7 +143,7 @@ blueprint:
       selector:
         number:
           min: 0
-          max: 120
+          max: 60
           unit_of_measurement: 분
           mode: slider
     input_end_mode:
@@ -198,20 +198,24 @@ trigger:
   - platform: state
     id: discomfort_change
     entity_id:
-
       - !input input_number_now_discomfort
       - !input input_number_target_discomfort
       - !input input_number_dehumid_threshold
+ 
+ 
   - platform: state
     id: index_on
-    entity_id: !input input_index_mode
+    entity_id:
+      - !input input_index_mode
+      - !input input_boost_mode
+      - !input input_dry_mode
     from: "off"
     to: "on"
   - platform: state
     id: over_time
     entity_id: !input input_index_mode
     to: "off"
-    for: "00:05:00"
+    for: "00:30:00"
   - platform: time_pattern
     id: time_change
     minutes: "/1"
@@ -224,31 +228,34 @@ action:
       
       temp_s: !input temperature_sensor
       hum_s: !input humidity_sensor
-      gen_t: !input input_number_general_temperature
+
+#부스트
       boost_thr: !input input_number_boost_threshold
       boost_dur: !input input_number_boost_duration
       boost_fan: !input boost_aircon_fan_mode
-
+      high_fan_mode: !input high_aircon_fan_mode
+#제습
       dehum_thr: !input input_number_dehumid_threshold
       tol: !input input_number_tolerance
+      
+#불쾌지수
       n_idx: !input input_number_now_discomfort
       tgt_idx: !input input_number_target_discomfort
-      
       idx_mode: !input input_index_mode
+      gen_t: !input input_number_general_temperature
       gen_fan_mode: !input general_aircon_fan_mode
-      high_fan_mode: !input high_aircon_fan_mode
 
+#종료모드
       shut_delay: !input input_number_shutdown_delay
-      
-      
 
-      dehumidity: "{{ states[dehum_thr].state | float(0) }}"
+#계산
       temperature: "{{ states[temp_s].state | float(0) }}"
       humidity: "{{ states[hum_s].state | float(0) }}"
-      discomfort_index: "{{ states[n_idx].state | float(0) }}"
-      target_discomfort: "{{ states[tgt_idx].state   | float(0) }}"
-      time_tra: !input input_time_tracker
-      shut_delay_time: "{{ shut_delay | float(0)}}"
+      dehumidity: "{{ states[dehum_thr].state | float(0) }}"                     #제습온도
+      discomfort_index: "{{ states[n_idx].state | float(0) }}"                   #불쾌지수
+      target_discomfort: "{{ states[tgt_idx].state   | float(0) }}"              #목표불쾌지수
+      time_tra: !input input_time_tracker                                        #불쾌지수on시간
+      shut_delay_time: "{{ shut_delay | float(0)}}"                              #종료모드 작동시간
 
   - choose:
       # 1) 가상 스위치 ON
@@ -362,6 +369,14 @@ action:
                     entity_id: !input climate_entity
                   data:
                     fan_mode: '{{ gen_fan_mode }}'
+                - service: input_text.set_value
+                  target:
+                    entity_id: !input input_log
+                  data:
+                    value: >
+                      {{ now().strftime('%m-%d %H:%M') }} | ON 에어컨 작동중 
+                      온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                      지수: {{ discomfort_index }}
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
                   target:
@@ -486,6 +501,14 @@ action:
                     entity_id: !input climate_entity
                   data:
                     fan_mode: '{{ gen_fan_mode }}'
+                - service: input_text.set_value
+                  target:
+                    entity_id: !input input_log
+                  data:
+                    value: >
+                      {{ now().strftime('%m-%d %H:%M') }} | ON 에어컨 작동중 
+                      온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                      지수: {{ discomfort_index }}
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
                   target:
@@ -497,10 +520,10 @@ action:
           - condition: trigger
             id: fan_on
           - condition: state
-            entity_id: !input input_boolean_switch
+            entity_id: !input input_index_mode
             state: "off"
           - condition: state
-            entity_id: !input input_end_mode
+            entity_id: !input input_end_mode_now
             state: "off"
         sequence:
           - service: input_boolean.turn_on
@@ -518,6 +541,9 @@ action:
           - service: input_boolean.turn_off
             target:
               entity_id: !input input_end_mode
+          - service: input_boolean.turn_off
+            target:
+              entity_id: !input input_end_mode_now
           - delay: "00:00:01"
           - service: climate.set_hvac_mode
             target:
@@ -611,6 +637,14 @@ action:
                     entity_id: !input climate_entity
                   data:
                     fan_mode: '{{ gen_fan_mode }}'
+                - service: input_text.set_value
+                  target:
+                    entity_id: !input input_log
+                  data:
+                    value: >
+                      {{ now().strftime('%m-%d %H:%M') }} | ON 에어컨 작동중 
+                      온도: {{ temperature }}℃ / 습도: {{ humidity }}%
+                      지수: {{ discomfort_index }}
                 - delay : "00:10:00"
                 - service: input_boolean.turn_on
                   target:
@@ -636,6 +670,12 @@ action:
           - condition: state
             entity_id: !input input_index_mode
             state: "on"
+          - condition: state
+            entity_id: !input input_end_mode_now
+            state: "off"
+          - condition: state
+            entity_id: !input input_dry_mode
+            state: "off"
           - condition: template
             value_template: >
               {% set on_time = states[time_tra].state %}
@@ -645,6 +685,12 @@ action:
                 {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 1200 }}
               {% endif %}
         sequence:
+          - service: input_boolean.turn_off
+            target:
+              entity_id: !input input_boost_mode
+          - service: input_boolean.turn_off
+            target:
+              entity_id: !input input_dry_mode
           - service: input_boolean.turn_off
             target:
               entity_id: !input input_index_mode
@@ -658,12 +704,8 @@ action:
 
       # 5) 불쾌지수·습도 변화
       - conditions:
-          - condition: or
-            conditions:
-              - condition: trigger
-                id: discomfort_change
-              - condition: trigger
-                id: over_time
+          - condition: trigger
+            id: discomfort_change
           - condition: state
             entity_id: !input input_boolean_switch
             state: "on"
@@ -685,8 +727,10 @@ action:
               {% if on_time in ['unknown', 'unavailable', None] %}
                 false
               {% else %}
-                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 600 }}
+                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 60 }}
               {% endif %}
+
+
         sequence:
           - choose:
               #5-1 제습 병행 제습 10분+냉방5분
@@ -715,7 +759,7 @@ action:
                       entity_id: !input input_log
                     data:
                       value: >
-                        {{ now().strftime('%m-%d %H:%M') }} | ON 💧제습모드 10분)
+                        {{ now().strftime('%m-%d %H:%M') }} | ON 💧제습모드 제습10분 냉방5분)
                         온도: {{ temperature }}℃ / 습도: {{ humidity }}% (기준: {{ dehumidity }}%)
                   - delay: "00:10:00"
                   - choose:
@@ -978,10 +1022,24 @@ action:
                                     {{ now().strftime('%m-%d %H:%M') }} | OFF ✅지수적정 
                                     온도: {{ temperature }}℃ / 습도: {{ humidity }}%
                                     지수: {{ discomfort_index }} / 목표: {{ target_discomfort }}
+      #6 오류방지
+
+      - conditions:
+          - condition: trigger
+            id: over_time
+          - condition: state
+            entity_id: !input input_boolean_switch
+            state: "on"
+        sequence:
+          - service: input_boolean.turn_off
+            target:
+              entity_id: !input input_boost_mode
+          - service: input_boolean.turn_off
+            target:
+              entity_id: !input input_dry_mode
 
 
-
-      # 6) 에어컨 OFF 감지 → 스위치 동기화 → #7
+      # 7 에어컨 OFF 감지 → 스위치 동기화 → #7
       - conditions:
           - condition: trigger
             id: ac_off
@@ -993,12 +1051,11 @@ action:
 
 
 
-      # 7 가상 스위치 OFF → 송풍 후 종료
+      # 8 가상 스위치 OFF → 송풍 후 종료
       - conditions:
           - condition: trigger
             id: switch_off
         sequence:
-          - delay: "00:00:01"
           - choose:
               - conditions:
                   - condition: state
@@ -1011,6 +1068,12 @@ action:
                     value_template: >
                        {{ 0 < shut_delay }}
                 sequence:
+                  - service: input_boolean.turn_on
+                    target:
+                      entity_id: !input input_end_mode_now
+                  - service: input_boolean.turn_on
+                    target:
+                      entity_id: !input input_index_mode
                   - delay: "00:00:01"
                   - service: climate.set_hvac_mode
                     target:
@@ -1022,12 +1085,6 @@ action:
                       entity_id: !input climate_entity
                     data:
                       fan_mode: '{{ boost_fan }}'
-                  - service: input_boolean.turn_on
-                    target:
-                      entity_id: !input input_end_mode_now
-                  - service: input_boolean.turn_off
-                    target:
-                      entity_id: !input input_index_mode
                   - service: input_text.set_value
                     target:
                       entity_id: !input input_log
