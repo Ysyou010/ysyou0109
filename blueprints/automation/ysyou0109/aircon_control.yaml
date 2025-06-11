@@ -668,13 +668,10 @@ action:
           - condition: trigger
             id: time_change
           - condition: state
-            entity_id: !input input_index_mode
+            entity_id: !input input_boolean_switch
             state: "on"
           - condition: state
             entity_id: !input input_end_mode_now
-            state: "off"
-          - condition: state
-            entity_id: !input input_dry_mode
             state: "off"
           - condition: template
             value_template: >
