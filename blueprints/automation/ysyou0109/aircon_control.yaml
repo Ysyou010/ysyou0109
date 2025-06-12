@@ -219,6 +219,9 @@ trigger:
   - platform: time_pattern
     id: time_change
     minutes: "/1"
+  - platform: time_pattern
+    id: time_change_idx
+    minutes: "/1"
     
 action:
   - variables:
@@ -257,6 +260,10 @@ action:
       time_tra: !input input_time_tracker                                        #불쾌지수on시간
       shut_delay_time: "{{ shut_delay | float(0)}}"                              #종료모드 작동시간
 
+      set_value_index: !input input_number_now_discomfort
+      discomfort_index_cal: "{{\n  (\n    0.81 * temperature +\n    0.01 * humidity * (0.99
+        * temperature - 14.3) +\n    46.3\n  ) | round(1)\n}}"
+      
   - choose:
       # 1) 가상 스위치 ON
       - conditions:
@@ -697,6 +704,17 @@ action:
             data:
               value: >
                 {{ now().strftime('%m-%d %H:%M') }} ++불쾌지수모드 작동 20분경과되어 초기화합니다.++
+#4-1
+      - conditions:
+          - condition: trigger
+            id: time_change_idx
+        sequence:
+          - service: input_number.set_value
+            target:
+              entity_id: !input input_number_now_discomfort
+            data:
+              value: '{{ discomfort_index_cal }}'
+
 
 
       # 5) 불쾌지수·습도 변화
