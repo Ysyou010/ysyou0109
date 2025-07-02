@@ -742,7 +742,7 @@ action:
               {% if on_time in ['unknown', 'unavailable', None] %}
                 false
               {% else %}
-                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 60 }}
+                {{ (now() - as_local(as_datetime(on_time))).total_seconds() > 5 }}
               {% endif %}
 
 
@@ -768,7 +768,7 @@ action:
                     target:
                       entity_id: !input climate_entity
                     data:
-                      fan_mode: '{{ boost_fan }}'
+                      fan_mode: '{{ high_fan_mode }}'
                   - service: input_text.set_value
                     target:
                       entity_id: !input input_log
@@ -852,7 +852,7 @@ action:
                     target:
                       entity_id: !input climate_entity
                     data:
-                      fan_mode: '{{ boost_fan }}'
+                      fan_mode: '{{ high_fan_mode }}'
                   - service: input_text.set_value
                     target:
                       entity_id: !input input_log
@@ -1099,7 +1099,7 @@ action:
                     target:
                       entity_id: !input climate_entity
                     data:
-                      fan_mode: '{{ boost_fan }}'
+                      fan_mode: '{{ high_fan_mode }}'
                   - service: input_text.set_value
                     target:
                       entity_id: !input input_log
