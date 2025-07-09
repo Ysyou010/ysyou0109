@@ -14,6 +14,7 @@ blueprint:
       - **부스트 모드**: 자동화 시작 시 실내 온도가 설정된 '부스트 기준 온도'보다 높으면, 즉시 **최저 온도(18℃)와 최대 팬 속도**로 강력하게 냉방을 시작합니다. (설정시간이 0일경우 작동하지 않음)
       - **지능적 종료**: 부스트 모드는 아래 조건 중 하나라도 먼저 만족하면 즉시 종료되고 일반 냉방으로 전환됩니다.
           - 설정된 최대 지속 시간이 다 되었을 때
+          - 실내 온도가 '일반 냉방 설정 온도'에 도달했을 때
           - 불쾌지수가 '목표 불쾌지수'에 도달했을 때
           - 사용자가 가상 스위치를 껐을 때
 
@@ -390,6 +391,9 @@ action:
                       - platform: numeric_state
                         entity_id: !input input_number_now_discomfort
                         below: !input input_number_target_discomfort
+                      - platform: numeric_state
+                        entity_id: !input temperature_sensor
+                        below: !input input_number_general_temperature
                       - platform: state
                         entity_id: !input input_boolean_switch
                         to: 'off'
