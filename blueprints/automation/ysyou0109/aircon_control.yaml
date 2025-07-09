@@ -455,9 +455,15 @@ action:
                   value: >
                     {{ now().strftime('%m-%d %H:%M') }} | ON 에어컨 작동중 온도: {{ temperature }}℃ / 습도: {{ humidity }}% 지수: {{ discomfort_index }}
               - delay: "00:10:00"
-              - service: input_boolean.turn_on
-                target:
-                  entity_id: !input input_end_mode
+              - choose:
+                  - conditions:
+                      - condition: state
+                        entity_id: !input input_boolean_switch
+                        state: "on"
+                    sequence:
+                      - service: input_boolean.turn_on
+                        target:
+                          entity_id: !input input_end_mode
 
       # 2) 불쾌지수/습도 변화에 따른 모드 제어
       - conditions:
