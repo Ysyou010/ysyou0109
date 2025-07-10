@@ -484,6 +484,8 @@ action:
           - condition: state
             entity_id: !input input_end_mode_now
             state: "off"
+          - condition: template
+            value_template: "{{ is_state(timer, 'idle') }}"
         sequence:
           - service: timer.cancel
             target:
@@ -557,6 +559,8 @@ action:
               - conditions:
                   - condition: template
                     value_template: "{{ discomfort_index > (target_discomfort + tol) }}"
+                  - condition: template
+                    value_template: "{{ is_state(timer, 'idle') }}"
                 sequence:
                   - delay: "00:00:01"
                   - service: input_boolean.turn_on
@@ -594,6 +598,8 @@ action:
               - conditions:
                   - condition: template
                     value_template: "{{ discomfort_index < (target_discomfort - tol) }}"
+                  - condition: template
+                    value_template: "{{ is_state(timer, 'idle') }}"
                 sequence:
                   - delay: "00:00:01"
                   - service: input_boolean.turn_on
@@ -626,6 +632,8 @@ action:
                   - condition: state
                     entity_id: !input input_boolean_switch
                     state: "on"
+                  - condition: template
+                    value_template: "{{ is_state(timer, 'idle') }}"
                 sequence:
                   - delay: "00:00:01"
                   - service: input_boolean.turn_on
@@ -854,11 +862,10 @@ action:
                     entity_id: !input input_boolean_switch
                     state: "on"
                   - condition: state
-                    entity_id: !input input_boost_mode
-                    state: "off"
-                  - condition: state
                     entity_id: !input input_end_mode_now
                     state: "off"
+                  - condition: template
+                    value_template: "{{ is_state(timer, 'idle') }}"
                   - condition: template
                     value_template: >
                       {% set on_time = states(time_tra) %}
