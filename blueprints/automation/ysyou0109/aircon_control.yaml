@@ -342,18 +342,6 @@ action:
                 - !input input_end_mode
                 - !input input_end_mode_now
           - delay: "00:00:01"
-          - service: climate.set_hvac_mode
-            target:
-              entity_id: !input climate_entity
-            data:
-              hvac_mode: cool
-          - delay: "00:00:01"
-          - service: climate.set_temperature
-            target:
-              entity_id: !input climate_entity
-            data:
-              temperature: "{{ gen_t }}"
-          - delay: "00:00:01"
           - choose:
               - conditions:
                   - condition: numeric_state
@@ -362,6 +350,11 @@ action:
                   - condition: template
                     value_template: "{{ boost_dur | int(0) > 0 }}"
                 sequence:
+                  - service: climate.set_hvac_mode
+                    target:
+                      entity_id: !input climate_entity
+                    data:
+                      hvac_mode: cool
                   - service: climate.set_temperature
                     target:
                       entity_id: !input climate_entity
@@ -409,6 +402,11 @@ action:
                             entity_id: !input input_boolean_switch
                             state: "on"
                         sequence:
+                          - service: climate.set_hvac_mode
+                            target:
+                              entity_id: !input climate_entity
+                            data:
+                              hvac_mode: cool
                           - service: climate.set_temperature
                             target:
                               entity_id: !input climate_entity
@@ -437,6 +435,7 @@ action:
                   entity_id: !input climate_entity
                 data:
                   hvac_mode: cool
+              - delay: "00:00:01"
               - service: climate.set_temperature
                 target:
                   entity_id: !input climate_entity
@@ -501,17 +500,17 @@ action:
                     target:
                       entity_id: !input input_dry_mode
                   - delay: "00:00:01"
-                  - service: climate.set_hvac_mode
-                    target:
-                      entity_id: !input climate_entity
-                    data:
-                      hvac_mode: dry
-                  - delay: "00:00:01"
                   - service: climate.set_fan_mode
                     target:
                       entity_id: !input climate_entity
                     data:
                       fan_mode: "{{ high_fan_mode }}"
+                  - delay: "00:00:01"
+                  - service: climate.set_hvac_mode
+                    target:
+                      entity_id: !input climate_entity
+                    data:
+                      hvac_mode: dry
                   - service: input_text.set_value
                     target:
                       entity_id: !input input_log
