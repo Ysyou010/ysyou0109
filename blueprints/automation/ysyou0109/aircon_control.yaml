@@ -261,17 +261,13 @@ trigger:
       - !input input_dry_mode
     from: "off"
     to: "on"
-  - platform: state
-    id: over_time
-    entity_id: !input input_index_mode
-    to: "off"
-    for: "00:30:00"
   - platform: time_pattern
     id: time_change
-    minutes: "/1"
-  - platform: time_pattern
-    id: time_change_idx
-    minutes: "/1"
+    minutes: "/5"
+  - platform: state
+    id: change_idx
+    entity_id:
+      - !input temperature_sensor
   - platform: event
     id: timer_finished
     event_type: timer.finished
@@ -828,7 +824,7 @@ action:
       # 6) 1분마다 불쾌지수 업데이트
       - conditions:
           - condition: trigger
-            id: time_change_idx
+            id: change_idx
         sequence:
           - service: input_number.set_value
             target:
@@ -842,7 +838,6 @@ action:
             id:
               - index_on
               - time_change
-              - over_time
         sequence:
           - choose:
               - conditions:
@@ -886,17 +881,5 @@ action:
                     data:
                       value: >
                         {{ now().strftime('%m-%d %H:%M') }} ++불쾌지수모드 작동 20분경과되어 초기화합니다.++
-              - conditions:
-                  - condition: trigger
-                    id: over_time
-                  - condition: state
-                    entity_id: !input input_boolean_switch
-                    state: "on"
-                sequence:
-                  - service: input_boolean.turn_off
-                    target:
-                      entity_id:
-                        - !input input_boost_mode
-                        - !input input_dry_mode
 
 mode: parallel
